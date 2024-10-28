@@ -1,0 +1,5 @@
+# Project exclude paths
+out/*
+.idea/
+resources/
+Fauxdango_001_T3_TD02.iml
