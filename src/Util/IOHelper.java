@@ -41,7 +41,18 @@ public class IOHelper {
         return nonblankString;
     }
 
-    private static boolean checkRegex(String str, String regex) {
+    /**
+     * Checks if a given string matches a specified regular expression.
+     * <p>
+     * This method compiles the provided regular expression into a pattern
+     * and matches it against the given string.
+     * </p>
+     *
+     * @param str   The string to be checked.
+     * @param regex The regular expression to match against the string.
+     * @return true if the string matches the regular expression, false otherwise.
+     */
+    public static boolean checkRegex(String str, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
         return matcher.find();
