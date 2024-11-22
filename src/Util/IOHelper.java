@@ -2,6 +2,7 @@ package Util;
 
 import Model.Console;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,4 +108,9 @@ public class IOHelper {
         return parsedToDouble;
     }
 
+    public static <T> void printList(List<T> list) {
+        for (T item : list) {
+            System.out.println(item.toString());
+        }
+    }
 }

@@ -8,7 +8,7 @@ import edu.psu.consolemenu.Menu;
 import edu.psu.consolemenu.MenuChoice;
 import edu.psu.consolemenu.MenuDisplay;
 
-import javax.xml.crypto.Data;
+import java.util.List;
 
 public class Fauxdango {
     Menu menuMain = new Menu("Fauxdango");
@@ -24,7 +24,6 @@ public class Fauxdango {
     MenuChoice choiceMainExit = menuMain.getMenuChoiceQuit();
 
     public void demo() {
-
         MenuDisplay md = new MenuDisplay(menuMain);
         AdvertisementBank adBank = new AdvertisementBank();
 
@@ -41,44 +40,32 @@ public class Fauxdango {
                 System.out.println();
                 System.out.println("Welcome, " + user.toString());
             } else if (chosen == choiceMainListAllMovies) {
-
-                Datastore.getMovies().forEach(movie -> System.out.println(movie.toString()));
+                IOHelper.printList(Datastore.getMovies());
             } else if (chosen == choiceMainListAllTheaters) {
-
-                Datastore.getTheaters().forEach(theater -> System.out.println(theater.toString()));
+                IOHelper.printList(Datastore.getTheaters());
             } else if (chosen == choiceMainListAllActors) {
-                for (Actor actor : Datastore.getActors()) {
-                    System.out.println(actor.toString());
-                }
+                IOHelper.printList(Datastore.getActors());
             } else if (chosen == choiceMainListAllShowings) {
-                for (Showing showing : Datastore.getShowings()) {
-                    System.out.println(showing.toString());
-                }
+                IOHelper.printList(Datastore.getShowings());
             } else if (chosen == choiceMainSearchActorsByName) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the name");
-                for (Actor actor : Datastore.searchActorsByName(text)) {
-                    System.out.println(actor.toString());
-                }
+                List<Actor> foundActors = Datastore.searchActorsByName(text);
+                IOHelper.printList(foundActors);
             } else if (chosen == choiceMainSearchTheatersByName) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the name");
-                for (Theater theater : Datastore.searchTheatersByName(text)) {
-                    System.out.println(theater.toString());
-                }
+                List<Theater> foundTheaters = Datastore.searchTheatersByName(text);
+                IOHelper.printList(foundTheaters);
             } else if (chosen == choiceMainSearchTheatersByZipcode) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter zipcode");
-                for (Theater theater : Datastore.searchTheatersByZipcode(text)) {
-                    System.out.println(theater.toString());
-                }
+                List<Theater> foundTheaters = Datastore.searchTheatersByZipcode(text);
+                IOHelper.printList(foundTheaters);
             } else if (chosen == choiceMainSearchMoviesByTitle) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the title");
-                for (Movie movie : Datastore.searchMoviesByTitle(text)) {
-                    System.out.println(movie.toString());
-                }
+                List<Movie> foundMovies = Datastore.searchMoviesByTitle(text);
+                IOHelper.printList(foundMovies);
             } else if (chosen == choiceMainExit) {
                 System.out.println("Goodbye");
             }
-
         }
-
     }
 }
