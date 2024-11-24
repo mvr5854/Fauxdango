@@ -11,6 +11,10 @@ public class AdvertisementBank {
         ads.add(ad);
     }
 
+    public void clearAds() {
+        ads.clear();
+    }
+
     public Advertisement getNextAd() {
         currentAdIndex++;
         if (currentAdIndex >= ads.size()) {
