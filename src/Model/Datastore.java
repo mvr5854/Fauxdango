@@ -313,15 +313,6 @@ public class Datastore {
         return null;
     }
 
-    public static Theater getTheaterById(long id) {
-        for (Theater theater : theaters) {
-            if (theater.getPrimaryKey() == id) {
-                return theater;
-            }
-        }
-        return null;
-    }
-
     public static List<Theater> searchTheatersByName(String text) {
         List<Theater> foundTheaters = new ArrayList<>();
         for (Theater theater : theaters) {
@@ -352,9 +343,6 @@ public class Datastore {
                 return showing;
             }
         }
-
-
         return null;
     }
-
 }
