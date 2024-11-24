@@ -85,29 +85,6 @@ public class IOHelper {
         return validEmailAddress;
     }
 
-    /**
-     * Prompt for user input, and convert the input to a double
-     * <p>
-     * Repeatedly prompt the user for a string input.
-     * <p>
-     * Parses the string input as a double and returns it to the caller.
-     *
-     * @param prompt Prompt the user so that they know what to input.
-     * @return the converted value of user input
-     * @author Phil O'Connell (pxo4@psu.edu )
-     * @author Mahfuzur Rahman (mvr5854@psu.edu)
-     */
-    public static double userInputDouble(String prompt) {
-        Double parsedToDouble = null;
-
-        while (parsedToDouble == null) {
-            String userInput = readStringFromKeyboard(prompt);
-            parsedToDouble = ValidationHelper.tryParseDouble(userInput);
-        }
-
-        return parsedToDouble;
-    }
-
     public static <T> void printList(List<T> list) {
         for (T item : list) {
             System.out.println(item.toString());
