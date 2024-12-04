@@ -39,4 +39,34 @@ class ValidationHelperTest {
     void isIntInRange__pass_negative_positive_positive__return_false() {
         assertFalse(ValidationHelper.isIntInRange(-2, 3, 8));
     }
+
+    @Test
+    void isCharInRange__pass_validChar_validString__return_true() {
+        assertTrue(ValidationHelper.isCharInRange('h', "hello"));
+    }
+
+    @Test
+    void isCharInRange__pass_validChar_specialCharInString__return_false() {
+        assertFalse(ValidationHelper.isCharInRange('h', "te$t"));
+    }
+
+    @Test
+    void isCharInRange__pass_validChar_nullString__return_false() {
+        assertFalse(ValidationHelper.isCharInRange('h', null));
+    }
+
+    @Test
+    void isCharInRange__pass_validChar_emptyString__return_false() {
+        assertFalse(ValidationHelper.isCharInRange('h', ""));
+    }
+
+    @Test
+    void isCharInRange__pass_specialChar_specialCharInString__return_true() {
+        assertTrue(ValidationHelper.isCharInRange('$', "te$t"));
+    }
+
+    @Test
+    void isCharInRange__pass_empty_specialCharInString__return_false() {
+        assertFalse(ValidationHelper.isCharInRange(' ', "te$t"));
+    }
 }
