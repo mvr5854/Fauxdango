@@ -26,29 +26,29 @@ class FauxdangoTest {
         System.setOut(new PrintStream(consoleOut));
     }
 
-    public String getNormalisedOutput(String output) {
+    void setInputStream(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    }
+
+    String getNormalisedOutput(String output) {
         output = output.replaceAll("\r", "");
-        String normalisedOutput = "";
+        StringBuilder normalisedOutput = new StringBuilder();
         String[] outList = output.split("Choice: |\n===");
 
         for (String out : Arrays.copyOfRange(outList, 1, outList.length)) {
             if (!out.contains("Fauxdango")) {
-                normalisedOutput += out.trim() + "\n";
+                normalisedOutput.append(out.trim()).append("\n");
             }
         }
 
-        return normalisedOutput;
+        return normalisedOutput.toString();
     }
 
-    static void setInputStream(String input) {
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-    }
-
-    public User mockUserRegistration(String firstName, String lastName, String emailAddress) {
+    User mockUserRegistration() {
         User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmailAddress(emailAddress);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmailAddress("john@psu.edu");
         return user;
     }
 
@@ -59,7 +59,7 @@ class FauxdangoTest {
         setInputStream("1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n6\n0\n7\n0\n8\n0\n9\n0\n");
         try (MockedStatic<UserDisplay> mockedUserDisplay = Mockito.mockStatic(UserDisplay.class)) {
             mockedUserDisplay.when(UserDisplay::registerUser)
-                    .thenReturn(mockUserRegistration("John", "Doe", "john@psu.edu"));
+                    .thenReturn(mockUserRegistration());
             fauxdango.demo();
             String printResult = consoleOut.toString();
             assertTrue(printResult.contains(expectedOutput));
@@ -180,6 +180,7 @@ class FauxdangoTest {
             assertEquals(expectedOutput, normalisedOutput);
         }
     }
+
     @Test
     @Order(9)
     void demo__choose_searchMovies__print_foundMovies() {
