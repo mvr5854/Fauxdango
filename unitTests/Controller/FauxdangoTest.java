@@ -1,46 +1,29 @@
 package Controller;
 
 import Model.User;
+import Util.IOHelper;
 import View.ConsoleDisplay.UserDisplay;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FauxdangoTest {
-
-
-    private ByteArrayOutputStream consoleOut;
-
-    @Mock
-    private UserDisplay mockUserDisplay;
-
-    @InjectMocks
     private Fauxdango fauxdango;
+    private ByteArrayOutputStream consoleOut;
 
     @BeforeEach
     void setUp() {
         fauxdango = new Fauxdango();
         consoleOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(consoleOut));
-    }
-
-    public void setInputStream(String input) {
-        InputStream consoleIn = new ByteArrayInputStream(input.getBytes());
-        System.setIn(consoleIn);
     }
 
     public String getNormalisedOutput(String output) {
@@ -57,26 +40,41 @@ class FauxdangoTest {
         return normalisedOutput;
     }
 
-    @Test
-    void demo__choose_register__prompt_registration() {
-        String expectedOutput = "Welcome, John Doe (test@email.com)";
-        setInputStream("1\n0\n");
-        when(mockUserDisplay.registerUser()).thenReturn(new User());
+    static void setInputStream(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    }
 
-        fauxdango.demo();
-        String printResult = consoleOut.toString();
-        String normalisedOutput = getNormalisedOutput(printResult);
-        assertTrue(normalisedOutput.contains(expectedOutput));
+    public User mockUserRegistration(String firstName, String lastName, String emailAddress) {
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmailAddress(emailAddress);
+        return user;
     }
 
     @Test
-    void demo__choose_listAllMovies__print_allMovies() {
+    @Order(1)
+    public void demo__choose_register__prompt_registration() {
+        String expectedOutput = "Welcome, John Doe (john@psu.edu)";
+        setInputStream("1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n6\n0\n");
+        try (MockedStatic<UserDisplay> mockedUserDisplay = Mockito.mockStatic(UserDisplay.class)) {
+            mockedUserDisplay.when(UserDisplay::registerUser)
+                    .thenReturn(mockUserRegistration("John", "Doe", "john@psu.edu"));
+            fauxdango.demo();
+            String printResult = consoleOut.toString();
+            assertTrue(printResult.contains(expectedOutput));
+        }
+    }
+
+    @Test
+    @Order(2)
+    public void demo__choose_listAllMovies__print_allMovies() {
         String expectedOutput = "Top Gun (PG, 1986) [ACTION, DRAMA] {110 min}\n" +
                 "This Is Spinal Tap (R, 1984) [COMEDY, DOCUMENTARY] {84 min}\n" +
                 "Halloween (R, 1978) [HORROR] {91 min}\n" +
                 "Escape from New York (R, 1981) [ACTION] {99 min}\n" +
                 "Goodbye\n";
-        setInputStream("2\n0\n");
+        setInputStream("2\n0");
 
         fauxdango.demo();
         String printResult = consoleOut.toString();
@@ -85,7 +83,8 @@ class FauxdangoTest {
     }
 
     @Test
-    void demo__choose_listAllTheaters__print_allMovies() {
+    @Order(3)
+    void demo__choose_listAllTheaters__print_allTheaters() {
         String expectedOutput = "AMC Neshaminy 24 (660 Neshaminy Mall, Bensalem, PA 19020) [(215) 396-8050]\n" +
                 "Regal UA Oxford Valley (403 Middletown Blvd, Langhorne, PA 19047) [(844) 462-7342]\n" +
                 "Goodbye\n";
@@ -98,7 +97,8 @@ class FauxdangoTest {
     }
 
     @Test
-    void demo__choose_listAllActors__print_allMovies() {
+    @Order(4)
+    void demo__choose_listAllActors__print_allActors() {
         String expectedOutput = "Tom Cruise (1963-07-03)\n" + "Kelly McGillis (1957-07-09)\n" +
                 "Michael McKean (1947-10-17)\n" + "Christopher Guest (1948-02-05)\n" +
                 "Jaimie Lee Curtis (1958-11-22)\n" + "Donald Pleasence (1919-10-05)\n" +
@@ -112,7 +112,8 @@ class FauxdangoTest {
     }
 
     @Test
-    void demo__choose_listAllShowings__print_allMovies() {
+    @Order(5)
+    void demo__choose_listAllShowings__print_allShowings() {
         String expectedOutput = "Top Gun (PG, 1986) [ACTION, DRAMA] {110 min} {13:00-14:50}\n" +
                 "Escape from New York (R, 1981) [ACTION] {99 min} {16:00-17:39}\n" +
                 "Halloween (R, 1978) [HORROR] {91 min} {18:00-19:31}\n" +
@@ -131,16 +132,20 @@ class FauxdangoTest {
     }
 
     @Test
-    void demo__choose_searchActors__print_allMovies() {
+    @Order(6)
+    void demo__choose_searchActors__print_foundActors() {
         String expectedOutput = "Tom Cruise (1963-07-03)\n" +
                 "Donald Pleasence (1919-10-05)\n" +
                 "Kurt Russell (1951-03-17)\n" +
                 "Goodbye\n";
-        setInputStream("6\nes\n0\n");
+        setInputStream("6\n0\n");
 
-        fauxdango.demo();
-        String printResult = consoleOut.toString();
-        String normalisedOutput = getNormalisedOutput(printResult);
-        assertEquals(expectedOutput, normalisedOutput);
+        try (MockedStatic<IOHelper> mockedIOHelper = Mockito.mockStatic(IOHelper.class)) {
+            mockedIOHelper.when(() -> IOHelper.readNonBlankStringFromKeyboard("Enter part of the name")).thenReturn("se");
+            fauxdango.demo();
+            String printResult = consoleOut.toString();
+            String normalisedOutput = getNormalisedOutput(printResult);
+            assertEquals(expectedOutput, normalisedOutput);
+        }
     }
 }

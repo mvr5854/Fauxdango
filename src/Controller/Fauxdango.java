@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Util.IOHelper;
+import Util.ListExtention;
 import View.ConsoleDisplay.AdvertisementDisplay;
 import View.ConsoleDisplay.UserDisplay;
 import edu.psu.consolemenu.Menu;
@@ -40,29 +41,29 @@ public class Fauxdango {
                 System.out.println();
                 System.out.println("Welcome, " + user.toString());
             } else if (chosen == choiceMainListAllMovies) {
-                IOHelper.printList(Datastore.getMovies());
+                ListExtention.print(Datastore.getMovies());
             } else if (chosen == choiceMainListAllTheaters) {
-                IOHelper.printList(Datastore.getTheaters());
+                ListExtention.print(Datastore.getTheaters());
             } else if (chosen == choiceMainListAllActors) {
-                IOHelper.printList(Datastore.getActors());
+                ListExtention.print(Datastore.getActors());
             } else if (chosen == choiceMainListAllShowings) {
-                IOHelper.printList(Datastore.getShowings());
+                ListExtention.print(Datastore.getShowings());
             } else if (chosen == choiceMainSearchActorsByName) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the name");
                 List<Actor> foundActors = Datastore.searchActorsByName(text);
-                IOHelper.printList(foundActors);
+                ListExtention.print(foundActors);
             } else if (chosen == choiceMainSearchTheatersByName) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the name");
                 List<Theater> foundTheaters = Datastore.searchTheatersByName(text);
-                IOHelper.printList(foundTheaters);
+                ListExtention.print(foundTheaters);
             } else if (chosen == choiceMainSearchTheatersByZipcode) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter zipcode");
                 List<Theater> foundTheaters = Datastore.searchTheatersByZipcode(text);
-                IOHelper.printList(foundTheaters);
+                ListExtention.print(foundTheaters);
             } else if (chosen == choiceMainSearchMoviesByTitle) {
                 String text = IOHelper.readNonBlankStringFromKeyboard("Enter part of the title");
                 List<Movie> foundMovies = Datastore.searchMoviesByTitle(text);
-                IOHelper.printList(foundMovies);
+                ListExtention.print(foundMovies);
             } else if (chosen == choiceMainExit) {
                 System.out.println("Goodbye");
             }
