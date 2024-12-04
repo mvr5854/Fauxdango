@@ -56,7 +56,7 @@ class FauxdangoTest {
     @Order(1)
     public void demo__choose_register__prompt_registration() {
         String expectedOutput = "Welcome, John Doe (john@psu.edu)";
-        setInputStream("1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n6\n0\n");
+        setInputStream("1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n6\n0\n7\n0\n8\n0\n9\n0\n");
         try (MockedStatic<UserDisplay> mockedUserDisplay = Mockito.mockStatic(UserDisplay.class)) {
             mockedUserDisplay.when(UserDisplay::registerUser)
                     .thenReturn(mockUserRegistration("John", "Doe", "john@psu.edu"));
@@ -142,6 +142,53 @@ class FauxdangoTest {
 
         try (MockedStatic<IOHelper> mockedIOHelper = Mockito.mockStatic(IOHelper.class)) {
             mockedIOHelper.when(() -> IOHelper.readNonBlankStringFromKeyboard("Enter part of the name")).thenReturn("se");
+            fauxdango.demo();
+            String printResult = consoleOut.toString();
+            String normalisedOutput = getNormalisedOutput(printResult);
+            assertEquals(expectedOutput, normalisedOutput);
+        }
+    }
+
+    @Test
+    @Order(7)
+    void demo__choose_searchTheatersByName__print_foundTheaters() {
+        String expectedOutput = "AMC Neshaminy 24 (660 Neshaminy Mall, Bensalem, PA 19020) [(215) 396-8050]\n" +
+                "Goodbye\n";
+        setInputStream("7\n0\n");
+
+        try (MockedStatic<IOHelper> mockedIOHelper = Mockito.mockStatic(IOHelper.class)) {
+            mockedIOHelper.when(() -> IOHelper.readNonBlankStringFromKeyboard("Enter part of the name")).thenReturn("amc");
+            fauxdango.demo();
+            String printResult = consoleOut.toString();
+            String normalisedOutput = getNormalisedOutput(printResult);
+            assertEquals(expectedOutput, normalisedOutput);
+        }
+    }
+
+    @Test
+    @Order(8)
+    void demo__choose_searchTheatersByZipcode__print_foundTheaters() {
+        String expectedOutput = "Regal UA Oxford Valley (403 Middletown Blvd, Langhorne, PA 19047) [(844) 462-7342]\n" +
+                "Goodbye\n";
+        setInputStream("8\n0\n");
+
+        try (MockedStatic<IOHelper> mockedIOHelper = Mockito.mockStatic(IOHelper.class)) {
+            mockedIOHelper.when(() -> IOHelper.readNonBlankStringFromKeyboard("Enter zipcode")).thenReturn("19047");
+            fauxdango.demo();
+            String printResult = consoleOut.toString();
+            String normalisedOutput = getNormalisedOutput(printResult);
+            assertEquals(expectedOutput, normalisedOutput);
+        }
+    }
+    @Test
+    @Order(9)
+    void demo__choose_searchMovies__print_foundMovies() {
+        String expectedOutput = "Escape from New York (R, 1981) [ACTION] {99 min}\n" +
+                "Goodbye\n";
+        setInputStream("9\n0\n");
+
+        try (MockedStatic<IOHelper> mockedIOHelper = Mockito.mockStatic(IOHelper.class)) {
+            mockedIOHelper.when(() -> IOHelper.readNonBlankStringFromKeyboard("Enter part of the title")).thenReturn("escape");
             fauxdango.demo();
             String printResult = consoleOut.toString();
             String normalisedOutput = getNormalisedOutput(printResult);
