@@ -17,10 +17,8 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Build with IntelliJ
-        run: |
-          ./idea.sh build
+      - name: Build with Maven
+        run: mvn clean install
 
-      - name: Run tests
-        run: |
-          ./idea.sh test
+      - name: Run tests with Maven
+        run: mvn test
