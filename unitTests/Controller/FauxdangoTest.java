@@ -54,7 +54,7 @@ class FauxdangoTest {
 
     @Test
     @Order(1)
-    public void demo__choose_register__prompt_registration() {
+    void demo__choose_register__prompt_registration() {
         String expectedOutput = "Welcome, John Doe (john@psu.edu)";
         setInputStream("1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n6\n0\n7\n0\n8\n0\n9\n0\n");
         try (MockedStatic<UserDisplay> mockedUserDisplay = Mockito.mockStatic(UserDisplay.class)) {
@@ -68,7 +68,7 @@ class FauxdangoTest {
 
     @Test
     @Order(2)
-    public void demo__choose_listAllMovies__print_allMovies() {
+    void demo__choose_listAllMovies__print_allMovies() {
         String expectedOutput = "Top Gun (PG, 1986) [ACTION, DRAMA] {110 min}\n" +
                 "This Is Spinal Tap (R, 1984) [COMEDY, DOCUMENTARY] {84 min}\n" +
                 "Halloween (R, 1978) [HORROR] {91 min}\n" +
