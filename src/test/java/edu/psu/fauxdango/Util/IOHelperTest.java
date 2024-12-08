@@ -1,9 +1,25 @@
 package edu.psu.fauxdango.Util;
 
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IOHelperTest {
+
+    @Test
+    void testSingleton__pass_none__return_onlyOneStaticMethod() {
+        Method[] methods = IOHelper.class.getDeclaredMethods();
+        Method[] allStaticMethods = Arrays.stream(methods)
+                .filter(method -> Modifier.isStatic(method.getModifiers()))
+                .toArray(Method[]::new);
+
+        assertEquals(1, allStaticMethods.length);
+        assertEquals("getInstance", allStaticMethods[0].getName());
+    }
 
     @Test
     void checkRegex__pass_validString_matchedPattern__return_true() {
