@@ -1,7 +1,13 @@
 package edu.psu.fauxdango.Util;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -9,6 +15,25 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IOHelperTest {
+    private ByteArrayOutputStream consoleOut;
+    private InputStream originalConsoleIn;
+
+    @BeforeEach
+    void setUp() {
+        // set current system.in to originalConsoleIn
+        originalConsoleIn = System.in;
+        consoleOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(consoleOut));
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.setIn(originalConsoleIn);
+    }
+
+    void setInputStream(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    }
 
     @Test
     void testSingleton__pass_none__return_onlyOneStaticMethod() {
@@ -19,6 +44,24 @@ class IOHelperTest {
 
         assertEquals(1, allStaticMethods.length);
         assertEquals("getInstance", allStaticMethods[0].getName());
+    }
+
+    @Test
+    void readValidNameFromKeyboard__pass_validName__return_name() {
+        setInputStream("John\n");
+        String result = IOHelper.readValidNameFromKeyboard("Enter your name");
+        assertEquals("John", result);
+
+    }
+
+    @Test
+    void readValidNameFromKeyboard__pass_invalidName__prompt_again() {
+        setInputStream("alpha45\nJohn\nAdib");
+        String result = IOHelper.readValidNameFromKeyboard("Enter your name");
+        String output = consoleOut.toString().replaceAll("\r", "");
+
+        assertEquals("John", result);
+        assertTrue(output.contains("Name can only contain letters\nand must begin with a capital letter"));
     }
 
     @Test
